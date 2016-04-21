@@ -1,0 +1,5 @@
+- Je potřeba přesně stanovit délky rámců, které do klasifikátoru půjdou
+
+	SCHÉMA:
+
+	Získání dat -> vzorkování -> extrakce příznaků -> klasifikace -> trashhold
