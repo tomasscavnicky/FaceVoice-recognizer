@@ -116,7 +116,7 @@ def main(args, argv):
 	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 26, 1])
 
 	# Train process
-	err = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=2, goal=0.1)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.2)
 
 	print("LOADING TEST DATA")
 
