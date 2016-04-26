@@ -68,8 +68,8 @@ def wav_to_mfcc(path, w_files, mfcc_output):
 		files.append(path + w_file)
 
 		mfcc_output.append(short_to_mfcc(content).tolist()[0])
-	
-	w_files = files
+
+	return files
 
 def main(args, argv):
 
@@ -90,25 +90,15 @@ def main(args, argv):
 
 	print("LOADING TRAIN DATA")
 
-	wav_to_mfcc(argv[0], w_files_train, train_input_data)
+	w_files_train = wav_to_mfcc(argv[0], w_files_train, train_input_data)
 
 	train_output_data = [[1.0]] * len(train_input_data)
 
-	wav_to_mfcc(argv[1], w_files_dev, train_input_data)
+	w_files_dev = wav_to_mfcc(argv[1], w_files_dev, train_input_data)
 
 	train_output_data += [[0.0]] * (len(train_input_data) - len(train_output_data))
 
-	print("LOADING TEST DATA")
-
-	wav_to_mfcc(argv[2], w_non_files_train, test_input_data)
-
-	test_output_data = [[1.0]] * len(test_input_data)
-
-	wav_to_mfcc(argv[3], w_non_files_dev, test_input_data)
-
-	test_output_data += [[0.0]] * (len(test_input_data) - len(test_output_data))
-	
-	print("TRAINING")
+	print("\nTRAINING\n")
 
 	minimal = float(0)
 	maximal = float(0)
@@ -123,35 +113,46 @@ def main(args, argv):
 
 	print("SHAPE: " + str(len(train_input_data[0])))
 
-	#net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 1])
-	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 1])
+	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 26, 1])
 
 	# Train process
-	err = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=10, goal=1.0)
+	err = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=2, goal=0.1)
 
-	print("TESTING with train data")
+	print("LOADING TEST DATA")
+
+	w_non_files_train = wav_to_mfcc(argv[2], w_non_files_train, test_input_data)
+
+	test_output_data = [[1.0]] * len(test_input_data)
+
+	w_non_files_dev = wav_to_mfcc(argv[3], w_non_files_dev, test_input_data)
+
+	test_output_data += [[0.0]] * (len(test_input_data) - len(test_output_data))
+
+	print("\nTESTING\n")
+
+	print("\n\tTESTING with train data\n")
 
 	train_err = float(0.0)
 	test_err = float(0.0)
 
 	for index in range(len(train_input_data)):
 		train = net.sim([train_input_data[index]])[0][0]
-		error = round(abs(abs(train) - abs(train_output_data[index][0])), 3)
-		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(train) + "\tError: " + str(error) + "\tFile: " + (w_files_train + w_files_dev)[0])
+		error = round(abs(abs(train_output_data[index][0]) - abs(train)), 3)
+		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_files_dev)[0])
 		train_err += error
 
-	print("TESTING with test data")
+	print("\n\tTESTING with test data\n")
 
 	for index in range(len(test_input_data)):
 		train = net.sim([test_input_data[index]])[0][0]
-		error = round(abs(abs(train) - abs(test_output_data[index][0])), 3)
-		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(train) + "\tError: " + str(error) + "\tFile: " + (w_non_files_train + w_non_files_dev)[0])
+		error = round(abs(abs(test_output_data[index][0]) - abs(train)), 3)
+		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_non_files_train + w_non_files_dev)[0])
 		test_err += error
 
-	print("TESTED")
+	print("\nTESTED\n")
 
-	print("TRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_files_dev), 3)))
-	print("TEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_non_files_train + wnon__files_dev), 3)))
+	print("\tTRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_files_dev), 3)))
+	print("\tTEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_non_files_train + w_non_files_dev), 3)))
 
 	print("PROCESSED")
 
