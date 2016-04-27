@@ -53,11 +53,11 @@ def main(args, argv):
 
 	w_files_train = wav_to_mfcc(argv[0], w_files_train, train_input_data)
 
-	train_output_data = [[1.0]] * len(train_input_data)
+	train_output_data = [[1.0]] * len(w_files_train)
 	
 	w_non_files_train = wav_to_mfcc(argv[1], w_non_files_train, train_input_data)
 
-	train_output_data = [[1.0]] * (len(train_input_data) - len(train_output_data))
+	train_output_data += [[0.0]] * (len(train_input_data) - len(train_output_data))
 
 # TRAINING NEURAL NETWORK
 
@@ -87,7 +87,7 @@ def main(args, argv):
 
 	w_files_dev = wav_to_mfcc(argv[2], w_files_dev, test_input_data)
 
-	test_output_data += [[0.0]] * (len(test_input_data)
+	test_output_data = [[1.0]] * (len(w_files_dev))
 
 	w_non_files_dev = wav_to_mfcc(argv[3], w_non_files_dev, test_input_data)
 
