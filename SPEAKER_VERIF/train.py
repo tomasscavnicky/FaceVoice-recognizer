@@ -38,8 +38,8 @@ def main(args, argv):
 
 	try:
 		w_files_train	= os.listdir(argv[0])
-		w_files_dev	= os.listdir(argv[1])
-		w_non_files_train = os.listdir(argv[2])
+		w_non_files_train = os.listdir(argv[1])
+		w_files_dev	= os.listdir(argv[2])
 		w_non_files_dev	= os.listdir(argv[3])
 	
 	except:
@@ -61,8 +61,8 @@ def main(args, argv):
 
 	print("\nTRAINING\n")
 
-	minimal = float(0)
-	maximal = float(0)
+	minimal = float(train_input_data[0][0])
+	maximal = float(minimal)
 
 	for i in train_input_data:
 
@@ -77,11 +77,11 @@ def main(args, argv):
 	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 1])
 
 	# Train process
-	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.2)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.1)
 
 # LOADING TESTING DATA
 
-	print("LOADING TEST DATA")
+	print("\nLOADING TEST DATA\n")
 
 	w_non_files_train = wav_to_mfcc(argv[2], w_non_files_train, test_input_data)
 
@@ -103,7 +103,7 @@ def main(args, argv):
 	for index in range(len(train_input_data)):
 		train = net.sim([train_input_data[index]])[0][0]
 		error = round(abs(abs(train_output_data[index][0]) - abs(train)), 3)
-		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_files_dev)[0])
+		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_files_dev)[index])
 		train_err += error
 
 	print("\n\tTESTING with test data\n")
@@ -111,7 +111,7 @@ def main(args, argv):
 	for index in range(len(test_input_data)):
 		train = net.sim([test_input_data[index]])[0][0]
 		error = round(abs(abs(test_output_data[index][0]) - abs(train)), 3)
-		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_non_files_train + w_non_files_dev)[0])
+		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_non_files_train + w_non_files_dev)[index])
 		test_err += error
 
 	print("\nTESTED\n")
