@@ -18,7 +18,7 @@ from features import mfcc
 from features import logfbank
 
 
-def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 2000, sampling = 16000):
+def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 4000, sampling = 16000):
 
 	files = list()
 
@@ -52,7 +52,7 @@ def short_to_mfcc(signal, sampling = 16000):
 	print(np.shape(mfcc_features))
 	#print(np.shape(mfcc_features[0:1,:]))
 
-	for X in mfcc_features:
+	#for X in mfcc_features:
 		
 
 	#for index in range(np.shape(mfcc_features)):
@@ -60,7 +60,7 @@ def short_to_mfcc(signal, sampling = 16000):
 
 	#mffcc_features[0] = np.average(mffc_features[0]
 
-	return mfcc_features[0:1,:]
+	return mfcc_features[50:51,:]
 
 def is_silence(segment, trashhold = 100):
 
