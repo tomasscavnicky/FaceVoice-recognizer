@@ -79,7 +79,7 @@ def main(args, argv):
 	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 1])
 
 	# Train process
-	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.1)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.01)
 
 # LOADING TESTING DATA
 
@@ -104,7 +104,7 @@ def main(args, argv):
 
 	for index in range(len(train_input_data)):
 		train = net.sim([train_input_data[index]])[0][0]
-		error = round(abs(abs(train_output_data[index][0]) - abs(train)), 3)
+		error = round(abs(train_output_data[index][0] - train), 3)
 		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_non_files_train)[index])
 		train_err += error
 
@@ -112,7 +112,7 @@ def main(args, argv):
 
 	for index in range(len(test_input_data)):
 		train = net.sim([test_input_data[index]])[0][0]
-		error = round(abs(abs(test_output_data[index][0]) - abs(train)), 3)
+		error = round(abs(test_output_data[index][0] - train), 3)
 		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_dev + w_non_files_dev)[index])
 		test_err += error
 

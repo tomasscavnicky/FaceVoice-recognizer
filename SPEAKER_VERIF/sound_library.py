@@ -40,19 +40,31 @@ def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 2000, s
 
 def short_to_mfcc(signal, sampling = 16000):
 
-	mfcc_features = mfcc(np.asarray(signal), samplerate=sampling, winlen=0.025, winstep=0.01, numcep=13, nfilt=26, nfft=512, lowfreq=0, highfreq=1000, preemph=0.97, ceplifter=22, appendEnergy=True)
-	fbank_features = logfbank(np.asarray(signal), sampling)
-
-	#print(fbank_features[1:3,:])
+	mfcc_features = mfcc(np.asarray(signal), samplerate=sampling, winlen=0.025, winstep=0.01, numcep=13, nfilt=23, nfft=512, lowfreq=32, highfreq=(sampling/2), preemph=0.97, ceplifter=22, appendEnergy=True)
+	#fbank_features = logfbank(np.asarray(signal), sampling)
 
 	#return fbank_features[1:3,:]
-	return fbank_features[1:2,:]
+	#return fbank_features[1:2,:]
+	#r-eturn fbank_features[2:3,:]
+	#print(np.shape(mfcc_features))
+	#print("MFCC: " + str(mfcc_features))
 
+	print(np.shape(mfcc_features))
+	#print(np.shape(mfcc_features[0:1,:]))
+
+	for X in mfcc_features:
+		
+
+	#for index in range(np.shape(mfcc_features)):
+		
+
+	#mffcc_features[0] = np.average(mffc_features[0]
+
+	return mfcc_features[0:1,:]
 
 def is_silence(segment, trashhold = 100):
 
 	energy = int(0)
-
 	trashhold *= trashhold
 
 	for point in segment:
