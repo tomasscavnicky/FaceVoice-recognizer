@@ -14,15 +14,33 @@ __date__ = "29.4.2016"
 
 import re, getopt, wave, sys, os, re, struct, numpy as np
 
+sampling = 16000
+
+def short_to_mfcc(short_list):
+
+	return
+
+
+
 def wav_to_short(wave_file):
+
+	global sampling
 
 	# Library wave 
 	w = wave.open(wave_file)
-	astr = w.readframes(w.getnframes())
+
+	# Starting from 1. sec because of booms
+	if(sampling >= w.getnframes()):
+		return
+
+	length = w.getnframes() - sampling
+
+	w.setpos(sampling)
+	wav_samples = w.readframes(length)
 
 	# Library struct 
-	a = struct.unpack("%ih" % (w.getnframes()* w.getnchannels()), astr)
-	return a
+	short_samples = struct.unpack("%ih" % (length* w.getnchannels()), wav_samples)
+	return short_samples
 
 
 def main(args, argv):
@@ -35,7 +53,7 @@ def main(args, argv):
 	except:
 		exit(2)
 
-	for w_file in w_files:
+	for w_file in sorted(w_files):
 
 		if not (w_file.endswith(".wav")):
 			continue
@@ -43,7 +61,7 @@ def main(args, argv):
 		print("Processing: " + w_file)
 		content = wav_to_short(argv[0] + w_file)
 
-	print("KONEC")
+	print("PROCESSED")
 
 	return 0
 

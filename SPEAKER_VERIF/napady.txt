@@ -3,3 +3,7 @@
 	SCHÉMA:
 
 	Získání dat -> vzorkování -> extrakce příznaků -> klasifikace -> trashhold
+
+
+
+Zdroje: http://www.ijetae.com/files/Volume5Issue2/IJETAE_0215_16.pdf
