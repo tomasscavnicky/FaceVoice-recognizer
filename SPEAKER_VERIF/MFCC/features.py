@@ -13,14 +13,24 @@ __email__ = "xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz"
 __date__ = "29.4.2016"
 
 import re, getopt, wave, sys, os, re, struct, numpy as np
+from features import mfcc
+from features import logfbank
+
+#import neurolab as nl
 
 sampling = 16000
 
-def short_to_mfcc(short_list):
+def short_to_mfcc(signal):
 
-	return
+	global sampling
 
+	mfcc_features = mfcc(signal, samplerate=sampling, winlen=0.025, winstep=0.01, numcep=13, nfilt=26, nfft=512, lowfreq=0, highfreq=1000, preemph=0.97, ceplifter=22, appendEnergy=True)
+	fbank_features = logfbank(signal, sampling)
 
+	#print(fbank_features[1:3,:])
+
+	#return fbank_features[1:3,:]
+	return fbank_features[1:2,:]
 
 def wav_to_short(wave_file):
 
@@ -40,10 +50,12 @@ def wav_to_short(wave_file):
 
 	# Library struct 
 	short_samples = struct.unpack("%ih" % (length* w.getnchannels()), wav_samples)
-	return short_samples
+	return np.asarray(short_samples)
 
 
 def main(args, argv):
+
+	input_data=list()
 
 	if(args != 1):
 		exit(1)
@@ -53,6 +65,8 @@ def main(args, argv):
 	except:
 		exit(2)
 
+	print("LOADING")
+
 	for w_file in sorted(w_files):
 
 		if not (w_file.endswith(".wav")):
@@ -60,6 +74,16 @@ def main(args, argv):
 
 		print("Processing: " + w_file)
 		content = wav_to_short(argv[0] + w_file)
+
+	#print(type(content))
+
+		input_data.append(short_to_mfcc(content))
+
+	#print(input_data)
+
+	print("TRAINING")
+
+	
 
 	print("PROCESSED")
 
