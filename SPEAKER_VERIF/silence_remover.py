@@ -55,7 +55,11 @@ def short_to_wav(wave_file, data):
 	w.setsampwidth(2)
 	w.setnframes(len(data))
 
-	w.writeframes(data)
+	for frame in data:
+		print(frame)
+		fr = struct.pack("h", frame)
+		w.writeframes(fr)
+
 	w.close()
 
 def remove_silence(signal, frame_len = 400, trashhold = 100):
@@ -67,7 +71,7 @@ def remove_silence(signal, frame_len = 400, trashhold = 100):
 
 	for segment_index in range(len(signal) / frame_len):
 
-		processed_signal.append(is_silence(signal[(segment_index * frame_len):((segment_index + 1)* frame_len)], trashhold))
+		processed_signal += is_silence(signal[(segment_index * frame_len):((segment_index + 1)* frame_len)], trashhold)
 
 	return processed_signal
 
@@ -79,13 +83,11 @@ def main(args, argv):
 	w_file = argv[0]
 	w_trashhold = int(argv[1])
 
-	signal = list()
+	signal = list(wav_to_short(w_file))
 
-	signal = wav_to_short(w_file)
+	new_signal = remove_silence(signal, frame_len = 400, trashhold = w_trashhold)
 
-	short_to_wav("unsilenced.wav", signal)	
-
-	new_signal = remove_silence(signal, frame_len = 400, trashhold = 5000)
+	short_to_wav("unsilenced.wav", new_signal)	
 
 	print(len(signal))
 	print(len(new_signal))
