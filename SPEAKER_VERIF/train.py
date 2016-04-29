@@ -54,74 +54,108 @@ def wav_to_short(wave_file):
 	short_samples = struct.unpack("%ih" % (length* w.getnchannels()), wav_samples)
 	return np.asarray(short_samples)
 
+def wav_to_mfcc(path, w_files, mfcc_output):
+
+	files = list()
+
+	for w_file in sorted(w_files):
+
+		if not (w_file.endswith(".wav")):
+			continue
+
+		print("Processing: " + w_file)
+		content = wav_to_short(path + w_file)
+		files.append(path + w_file)
+
+		mfcc_output.append(short_to_mfcc(content).tolist()[0])
+	
+	w_files = files
 
 def main(args, argv):
 
-	input_data=list()
+	train_input_data=list()
+	test_input_data=list()
 
-	if(args != 2):
+	if(args != 4):
 		exit(1)
 
 	try:
 		w_files_train	= os.listdir(argv[0])
 		w_files_dev	= os.listdir(argv[1])
+		w_non_files_train = os.listdir(argv[2])
+		w_non_files_dev	= os.listdir(argv[3])
+	
 	except:
 		exit(2)
 
-	print("LOADING")
+	print("LOADING TRAIN DATA")
 
-	for w_file in sorted(w_files_train):
+	wav_to_mfcc(argv[0], w_files_train, train_input_data)
 
-		if not (w_file.endswith(".wav")):
-			continue
+	train_output_data = [[1.0]] * len(train_input_data)
 
-		print("Processing: " + w_file)
-		content = wav_to_short(argv[0] + w_file)
+	wav_to_mfcc(argv[1], w_files_dev, train_input_data)
 
-		input_data.append(short_to_mfcc(content).tolist()[0])
+	train_output_data += [[0.0]] * (len(train_input_data) - len(train_output_data))
 
-	target = [[1.0]] * len(input_data)
+	print("LOADING TEST DATA")
 
-	for w_file in sorted(w_files_dev):
+	wav_to_mfcc(argv[2], w_non_files_train, test_input_data)
 
-		if not (w_file.endswith(".wav")):
-			continue
+	test_output_data = [[1.0]] * len(test_input_data)
 
-		print("Processing: " + w_file)
-		content = wav_to_short(argv[1] + w_file)
+	wav_to_mfcc(argv[3], w_non_files_dev, test_input_data)
 
-		input_data.append(short_to_mfcc(content).tolist()[0])
-
+	test_output_data += [[0.0]] * (len(test_input_data) - len(test_output_data))
+	
 	print("TRAINING")
-
-	target += [[0.0]] * (len(input_data) - len(target))
-
-	print(target)
 
 	minimal = float(0)
 	maximal = float(0)
 
-	for i in input_data:
+	for i in train_input_data:
+
 		minimal = min(list([minimal, max(i)]))
 		maximal = max(list([maximal, max(i)]))
 
 	print("MINIMAL VALUE: " + str(minimal))
 	print("MAXIMAL VALUE: " + str(maximal))
 
-	print("SHAPE: " + str(len(input_data[0])))
+	print("SHAPE: " + str(len(train_input_data[0])))
 
-	net = nl.net.newff([[minimal, maximal]] * len(input_data[0]), [26, 26, 1])
+	#net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 1])
+	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 1])
 
 	# Train process
-	err = net.train(np.asarray(input_data), np.asarray(target), show=100000, goal=0.3)
+	err = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=10, goal=1.0)
 
-	for dato in input_data:
-		print(net.sim([dato]))
+	print("TESTING with train data")
+
+	train_err = float(0.0)
+	test_err = float(0.0)
+
+	for index in range(len(train_input_data)):
+		train = net.sim([train_input_data[index]])[0][0]
+		error = round(abs(abs(train) - abs(train_output_data[index][0])), 3)
+		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(train) + "\tError: " + str(error) + "\tFile: " + (w_files_train + w_files_dev)[0])
+		train_err += error
+
+	print("TESTING with test data")
+
+	for index in range(len(test_input_data)):
+		train = net.sim([test_input_data[index]])[0][0]
+		error = round(abs(abs(train) - abs(test_output_data[index][0])), 3)
+		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(train) + "\tError: " + str(error) + "\tFile: " + (w_non_files_train + w_non_files_dev)[0])
+		test_err += error
+
+	print("TESTED")
+
+	print("TRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_files_dev), 3)))
+	print("TEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_non_files_train + wnon__files_dev), 3)))
 
 	print("PROCESSED")
 
 	return 0
-
 
 # Pokud je soubor hlavni a je v nem main, jinak odstranit
 if __name__ == '__main__':
