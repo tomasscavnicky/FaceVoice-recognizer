@@ -1,206 +1,72 @@
+from sklearn.decomposition import RandomizedPCA
 from PIL import Image
 import numpy
-import matplotlib.pylab as pylab
-import os
-from operator import mul
-from functools import reduce
+import glob
+import math
+import os.path
+import string
 
-from sklearn.grid_search import GridSearchCV
-from sklearn.decomposition import RandomizedPCA
-from sklearn.svm import SVC
 
+ 
 
-def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
-    """Helper function to plot a gallery of portraits"""
-    pylab.figure(figsize=(1.8 * n_col, 2.4 * n_row))
-    pylab.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
-    for i in range(n_row * n_col):
-        pylab.subplot(n_row, n_col, i + 1)
-        pylab.imshow(images[i].reshape((h, w)), cmap=pylab.cm.gray)
-        pylab.title(titles[i], size=12)
-        pylab.xticks(())
-        pylab.yticks(())
+IMG_RES = 80 * 80
+NUM_EIGENFACES = 17 # num of features extracted from training images
+NUM_TRAINIMAGES = 152 # num of training images
 
+ 
+X = numpy.zeros([NUM_TRAINIMAGES, IMG_RES], dtype='int8') # training images
+y = numpy.zeros(NUM_TRAINIMAGES) # labels
 
 
-def pca(X):
-  # Principal Component Analysis
-  # input: X, matrix with training data as flattened arrays in rows
-  # return: projection matrix (with important dimensions first),
-  # variance and mean
 
-  #get dimensions
-  num_data,dim = X.shape
 
-  #center data
-  mean_X = X.mean(axis=0)
-  for i in range(num_data):
-      X[i] -= mean_X
 
-  if dim>100:
-      M = numpy.dot(X,X.T) #covariance matrix
-      e,EV = numpy.linalg.eigh(M) #eigenvalues and eigenvectors
-      tmp = numpy.dot(X.T,EV).T #this is the compact trick
-      V = tmp[::-1] #reverse since last eigenvectors are the ones we want
-      S = numpy.sqrt(e)[::-1] #reverse since eigenvalues are in increasing order
-  else:
-      print('PCA - SVD used')
-      U,S,V = linalg.svd(X)
-      V = V[:num_data] #only makes sense to return the first num_data
+folder_name = "faces/"
+test_positive_faces = os.listdir(folder_name)
+imnbr_pos = len(test_positive_faces)
 
-  #return the projection matrix, the variance and the mean
-  return V,S,mean_X
+target = numpy.array([numpy.array(Image.open(folder_name+test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
 
+folder_name = "non_target_train/"
+test_positive_faces = os.listdir(folder_name)
+imnbr_pos = len(test_positive_faces)
 
-def compare_images(folder_name):
-	test_positive_faces = os.listdir(folder_name)
-	im_pos = numpy.array(Image.open(folder_name+test_positive_faces[0]).convert('L'))
-	m_pos, n_pos = im.shape[0:2]
-	imnbr_pos = len(test_positive_faces) #get the number of images
+non_target = numpy.array([numpy.array(Image.open(folder_name+test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
-	target_train_pos = numpy.array([numpy.array(Image.open(folder_name+test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
-	V_pos,S_pos,immean_pos = pca(target_train_pos)
+X = numpy.concatenate((target, non_target), axis=0)
 
-	immean_pos = immean_pos.reshape(m_pos,n_pos)
 
-	n_eigenf = 10 if imnbr_pos >= 10 else imnbr_pos
+target_labels = numpy.ones(NUM_TRAINIMAGES-132)
+non_target_labels = numpy.zeros(NUM_TRAINIMAGES-20)
 
-	x = reduce(mul, (V_pos[:n_eigenf] - V[:n_eigenf])**2, 1)
-	return x
+y = numpy.append(target_labels, non_target_labels)
 
 
-def compare_image(image_name):
-	im_pos = numpy.array(Image.open(image_name).convert('L'))
-	m_pos, n_pos = im.shape[0:2]
-	imnbr_pos = 1 #get the number of images
+# extracting features from training images
+pca = RandomizedPCA(n_components=NUM_EIGENFACES, whiten=True).fit(X)
+X_pca = pca.transform(X)
 
-	target_train_pos = numpy.array([numpy.array(Image.open(image_name).convert('L')).flatten()],'f')
+# load test faces
+test_faces = glob.glob('test_faces/*')
 
-	V_pos,S_pos,immean_pos = pca(target_train_pos)
+# create an array with flattened images located in folder folder_name
+X = numpy.zeros([len(test_faces), IMG_RES], dtype='int8')
 
-	immean_pos = immean_pos.reshape(m_pos,n_pos)
+folder_name = "faces_dev/"
+test_positive_faces = os.listdir(folder_name)
+imnbr_pos = len(test_positive_faces)
 
-	n_eigenf = 10 if imnbr_pos >= 10 else imnbr_pos
-	print("S_pos: "+str(S_pos))
-	x = reduce(mul, (S_pos[:n_eigenf] - S[:n_eigenf])**2, 1)
-	return x
+X = numpy.array([numpy.array(Image.open(folder_name+test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
-def recognise(img):
-	normal_img = img - immean
-	M = numpy.dot(img, img.T)
-	e,EV = numpy.linalg.eigh(M)
-	tmp = numpy.dot(img.T, EV).T
-	V = tmp[::-1]
-	S = numpy.sqrt(abs(e))[::-1]
-
-
-
-
-
-
-
-
-
-# CREATING MODEL
-
-imlist = os.listdir('faces')
-im = numpy.array(Image.open('faces/'+imlist[0]).convert('L')) #open one image to get the size
-m,n = im.shape[0:2] #get the size of the images
-imnbr = len(imlist) #get the number of images
-target_train = numpy.array([numpy.array(Image.open('faces/'+imlist[i]).convert('L')).flatten() for i in range(imnbr)],'f')
-
-
-
-
-V,S,immean = pca(target_train)
-print(V)
-exit()
-
-
-
-immean = immean.reshape(m,n)
-mode = V[0].reshape(m,n)
-
-# pylab.figure()
-# pylab.gray()
-# pylab.imshow(immean)
-
-# pylab.figure()
-# pylab.gray()
-# pylab.imshow(mode)
-
-# pylab.show()
-
-# exit()
-
-
-
-
-# # IMAGES SEPARATELY
-
-# for img_name in os.listdir("negative_faces2"):
-# 	obrazok = numpy.array([numpy.array(Image.open("negative_faces2/"+img_name).convert('L')).flatten()])
-# 	V_pos,S_pos,immean_pos = pca(obrazok)
-# 	exit()
-# 	x = reduce(mul, (obrazok[:20] - S[:n_eigenf])**2, 1)
-# 	# x = compare_image("negative_faces2/"+img_name)
-# 	print(img_name+":")
-# 	print(x)
-# exit()
-
-
-
-# POSITIVE TEST IMAGES
-for i in range(1,4):
-	x = compare_images('positive_faces'+str(i)+'/')
-	print("positive images results "+str(i)+":")
-	print(numpy.mean(x))
-
-
-# NEGATIVE TEST IMAGES
-
-
-for i in range(1,11):
-	x = compare_images('negative_faces'+str(i)+'/')
-	print("negative images results "+str(i)+":")
-	# is_face = True if x > 1e+54 else False
-	print(numpy.mean(x))
-
-# x = compare_images('negative_faces1/')
-# print("negative images results 1:")
-# print(x)
-
-# x = compare_images('negative_faces2/')
-# print("negative images results 2:")
-# print(x)
-
-# x = compare_images('negative_faces3/')
-# print("negative images results 3:")
-# print(x)
-
-
-
-
-#show the images
-# pylab.figure()
-# pylab.gray()
-# pylab.imshow(immean)
-
-# for i in range(0,19):
-# 	pylab.figure()
-# 	pylab.gray()
-# 	pylab.imshow(V[i].reshape(m,n))
-
-# pylab.show()
-
-# pylab.figure()
-# pylab.gray()
-# pylab.imshow(mode1)
-
-# pylab.figure()
-# pylab.gray()
-# pylab.imshow(mode2)
-
-# pylab.show()
+# run through test images
+for j, ref_pca in enumerate(pca.transform(X)):
+    distances = []
+    # calculate euclidian distance from test image to each of the known images and save distances
+    for i, test_pca in enumerate(X_pca):
+        dist = math.sqrt(sum([diff**2 for diff in (ref_pca - test_pca)]))
+        distances.append((dist, y[i]))
+ 
+    found_ID = min(distances)[1]
+    print("Identified (result: "+ str(found_ID) +" - dist - " + str(min(distances)[0])  + ")")
