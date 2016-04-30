@@ -49,7 +49,7 @@ def short_to_mfcc(signal, sampling = 16000):
 		
 	Priznaky = np.ones(np.shape(mfcc_features)[1])
 
-	Priznaky = np.average(mfcc_features, axis = 0)[1:13]
+	Priznaky = np.average(mfcc_features, axis = 0)[1:17]
 	
 	return np.array(Priznaky)
 

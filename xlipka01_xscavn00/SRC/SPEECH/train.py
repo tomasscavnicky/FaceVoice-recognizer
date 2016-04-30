@@ -34,7 +34,7 @@ def main(args, argv):
 	train_input_data=list()
 	test_input_data=list()
 
-	if(args != 5):
+	if(args != 6):
 		exit(1)
 
 	try:
@@ -92,10 +92,10 @@ def main(args, argv):
 
 	print("SHAPE: " + str(len(train_input_data[0])))
 
-	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [13, 13, 1])
+	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [16, 16, 1], [nl.trans.LogSig()] *3 )
 
 	# Train process
-	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.05)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.1)
 
 # LOADING TESTING DATA
 
@@ -147,7 +147,7 @@ def main(args, argv):
 	print("\nTESTED\n")
 
 	print("\tTRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_non_files_train), 3)))
-	print("\tTEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_files_dev + w_non_files_dev), 3)))
+	print("\tTEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_files_dev + w_non_files_dev), 3))) if(len(w_files_dev + w_non_files_dev) != 0) else None
 
 	print("\nTEST DATA STATISTICS:\n")
 	print("\tCorrect data Recognized          [OK]:     " + str(Correct_data_OK))
@@ -159,7 +159,6 @@ def main(args, argv):
 	print("\tFAIL:  " + str(Correct_data_FAIL + InCorrect_data_FAIL))
 
 	try:
-		print(str(argv[4] + "/" + str(argv[5]) + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
 		net.save(str(argv[4] + "/" + str(argv[5]) + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
 	except:
 		print("\nERROR: Saving net\n")
