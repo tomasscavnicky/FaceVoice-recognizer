@@ -37,8 +37,10 @@ def main(args, argv):
 		exit(1)
 
 	try:
+		# Training data
 		w_files_train	= os.listdir(argv[0])
 		w_non_files_train = os.listdir(argv[1])
+		# Testing data
 		w_files_dev	= os.listdir(argv[2])
 		w_non_files_dev	= os.listdir(argv[3])
 	
@@ -52,10 +54,10 @@ def main(args, argv):
 	w_files_train = wav_to_mfcc(argv[0], w_files_train, train_input_data)
 
 	train_output_data = [[1.0]] * len(train_input_data)
+	
+	w_non_files_train = wav_to_mfcc(argv[1], w_non_files_train, train_input_data)
 
-	w_files_dev = wav_to_mfcc(argv[1], w_files_dev, train_input_data)
-
-	train_output_data += [[0.0]] * (len(train_input_data) - len(train_output_data))
+	train_output_data = [[1.0]] * (len(train_input_data) - len(train_output_data))
 
 # TRAINING NEURAL NETWORK
 
@@ -83,9 +85,9 @@ def main(args, argv):
 
 	print("\nLOADING TEST DATA\n")
 
-	w_non_files_train = wav_to_mfcc(argv[2], w_non_files_train, test_input_data)
+	w_files_dev = wav_to_mfcc(argv[2], w_files_dev, test_input_data)
 
-	test_output_data = [[1.0]] * len(test_input_data)
+	test_output_data += [[0.0]] * (len(test_input_data)
 
 	w_non_files_dev = wav_to_mfcc(argv[3], w_non_files_dev, test_input_data)
 
@@ -103,7 +105,7 @@ def main(args, argv):
 	for index in range(len(train_input_data)):
 		train = net.sim([train_input_data[index]])[0][0]
 		error = round(abs(abs(train_output_data[index][0]) - abs(train)), 3)
-		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_files_dev)[index])
+		print("Excepted: " + str(train_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_train + w_non_files_train)[index])
 		train_err += error
 
 	print("\n\tTESTING with test data\n")
@@ -111,13 +113,13 @@ def main(args, argv):
 	for index in range(len(test_input_data)):
 		train = net.sim([test_input_data[index]])[0][0]
 		error = round(abs(abs(test_output_data[index][0]) - abs(train)), 3)
-		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_non_files_train + w_non_files_dev)[index])
+		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_dev + w_non_files_dev)[index])
 		test_err += error
 
 	print("\nTESTED\n")
 
-	print("\tTRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_files_dev), 3)))
-	print("\tTEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_non_files_train + w_non_files_dev), 3)))
+	print("\tTRAIN DATA RECONGNITION ERROR: " + str(round(train_err / len(w_files_train + w_non_files_train), 3)))
+	print("\tTEST DATA  RECONGNITION ERROR: " + str(round(test_err / len(w_files_dev + w_non_files_dev), 3)))
 
 	print("PROCESSED")
 
