@@ -41,7 +41,7 @@ def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 4000, s
 
 def short_to_mfcc(signal, sampling = 16000):
 
-	mfcc_features = mfcc(np.asarray(signal), samplerate=sampling, winlen=0.025, winstep=0.02, numcep=26, nfilt=26, nfft=512, lowfreq=32, highfreq=2000, preemph=0.97, ceplifter=22, appendEnergy=True)
+	mfcc_features = mfcc(np.asarray(signal), samplerate=sampling, winlen=0.025, winstep=0.015, numcep=26, nfilt=26, nfft=512, lowfreq=32, highfreq=2000, preemph=0.97, ceplifter=22, appendEnergy=True)
 	#fbank_features = logfbank(np.asarray(signal), sampling)
 
 	#return fbank_features[1:3,:]
@@ -60,7 +60,7 @@ def short_to_mfcc(signal, sampling = 16000):
 	Priznaky = np.ones(np.shape(mfcc_features)[1])
 
 	#Priznaky = np.average(mfcc_features, axis = 0)[1:19]
-	Priznaky = np.average(mfcc_features, axis = 0)[:]
+	Priznaky = np.average(mfcc_features, axis = 0)[1:13]
 	
 	#print(Priznaky)
 

@@ -106,10 +106,10 @@ def main(args, argv):
 
 	print("SHAPE: " + str(len(train_input_data[0])))
 
-	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [26, 26, 1])
+	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [13, 13, 1])
 
 	# Train process
-	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.05)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.1)
 
 # LOADING TESTING DATA
 
@@ -173,6 +173,8 @@ def main(args, argv):
 
 	print("\tOK:   " + str(Correct_data_OK + InCorrect_data_OK))
 	print("\tFAIL:  " + str(Correct_data_FAIL + InCorrect_data_FAIL))
+
+	net.save(str("NET_ERR_" + str(Correct_data_FAIL + InCoorect_data_FAIL)))
 
 	print("\nPROCESSED\n")
 
