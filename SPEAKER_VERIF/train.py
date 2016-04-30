@@ -85,7 +85,7 @@ def main(args, argv):
 			if(train_output_data[index1] == [1.0]):
 				plt.scatter(index2, train_input_data[index1][index2], color='blue')
 			else:
-				plt.scatter((index2 + 0.3), train_input_data[index1][index2], color='red')
+				plt.scatter((index2 + 0.2), train_input_data[index1][index2], color='red')
 
 	plt.show()
 
@@ -98,7 +98,7 @@ def main(args, argv):
 
 	for i in train_input_data:
 
-		minimal = min(list([minimal, max(i)]))
+		minimal = min(list([minimal, min(i)]))
 		maximal = max(list([maximal, max(i)]))
 
 	print("MINIMAL VALUE: " + str(minimal))
@@ -109,7 +109,7 @@ def main(args, argv):
 	net = nl.net.newff([[minimal, maximal]] * len(train_input_data[0]), [13, 13, 1])
 
 	# Train process
-	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.1)
+	er = net.train(np.asarray(train_input_data), np.asarray(train_output_data), show=1, goal=0.05)
 
 # LOADING TESTING DATA
 
@@ -147,8 +147,15 @@ def main(args, argv):
 
 	for index in range(len(test_input_data)):
 		train = net.sim([test_input_data[index]])[0][0]
+
+		if(train < 0)
+			train = 0
+		elif(train > 1)
+			train = 1
+
 		error = round(abs(test_output_data[index][0] - train), 3)
 		print("Excepted: " + str(test_output_data[index][0]) + "\tGot: " + str(round(train, 3)) + "\tError[%]: " + str(error * 100) + "\t\tFile: " + (w_files_dev + w_non_files_dev)[index])
+
 		test_err += error
 
 		if(test_output_data[index][0] == 1 and error < 0.5):
@@ -174,7 +181,7 @@ def main(args, argv):
 	print("\tOK:   " + str(Correct_data_OK + InCorrect_data_OK))
 	print("\tFAIL:  " + str(Correct_data_FAIL + InCorrect_data_FAIL))
 
-	net.save(str("NET_ERR_" + str(Correct_data_FAIL + InCoorect_data_FAIL)))
+	net.save(str("NET_ERR_" + str(Correct_data_FAIL + InCorrect_data_FAIL)) + str("_NET"))
 
 	print("\nPROCESSED\n")
 

@@ -21,6 +21,11 @@ from sound_library import wav_to_mfcc
 
 import neurolab as nl
 
+def speech_recognize(path, path_to_net):
+
+	test_input_data = list()
+
+
 
 def main(args, argv):
 
@@ -35,25 +40,23 @@ def main(args, argv):
 	try:
 		# Testing data
 		w_files_test = os.listdir(argv[0])
+		if(argv[1].endswith("NET")):
+			exit(2)
 		w_file_output = open(argv[1], "w")
 		net = nl.load(argv[2])
 
 	except:
-		exit(2)
+		exit(3)
 
 # LOADING TESTING DATA
 
-	print("LOADING TEST DATA")
+	print("\nLOADING TEST DATA\n")
 
-	w_files_test = wav_to_mfcc(argv[1], w_files_test, test_input_data)
+	w_files_test = wav_to_mfcc(argv[0], w_files_test, test_input_data)
 
 # TESTING
 
-	print("\nTESTING\n")
-
 	print("\n\tTESTING with test data\n")
-
-	net = nl.load(args[2])
 
 	for index in range(len(test_input_data)):
 		score = net.sim([test_input_data[index]])[0][0]
@@ -71,8 +74,7 @@ def main(args, argv):
 		results += file_name + " " + str(score) + " " + str(decision) + "\n"
 
 	w_file_output.write(results)
-
-	print("\nTESTED\n")
+	w_file_output.close()
 
 	print("\nPROCESSED\n")
 
