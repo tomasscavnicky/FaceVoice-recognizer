@@ -1,0 +1,40 @@
+Jakym zpusobem natrenovat nas klasifikator ??
+
+	1. Extrakce priznaku (jake)
+		- Obrazek
+		- Hudba
+
+	2. Vyber algoritmu
+		- Zduvodneni pro a proti
+
+	3. Nakodeni
+
+	4. Odzkouseni
+
+	5. Dokumentace + prezentace
+
+
+
+
+2. Algoritmus
+
+	a) Použití K-nearest sousedů:
+
+		1. Extrakce příznaků a jejich uložení pro klasifikaci (škálování -> vzít min a max z každého, zredukovat)
+
+			-> Prohledávání v N-dumenzionálním prostoru (dle počti příznaků)
+			-> Docela efektivní nalezení v případě DOBŘE ZÍSKANÝCH PŘÍZNAKŮ !! (nemožné)
+			-> Velikost "úspěchu" dána počtem nejbližších sousedů a jejich rozdílných tříd
+				-> Zjištění třídy(maximální počet prvků dané třídy)
+				-> Suma(počet prvků zbylé třídy)
+				úspěšnost = (Počet nejbližších sousedů klasifikované třídy) / (Počet zbylých sousedů jiné třídy)
+
+	b) MAP klasifikátor
+
+		- Určení střední hodnoty v datech dané třídy (pro všechny třídy)
+		- Určení směrodatných odchylek
+		- Určení gausovek (namodelování)
+		- Rozpoznávání tak, že dosadím do všech gausovek a mrknu tam, kde je pravděpodobnost největší 
+		--> nebo určení hranic gausovek (polygon ??)
+
+	c) 
