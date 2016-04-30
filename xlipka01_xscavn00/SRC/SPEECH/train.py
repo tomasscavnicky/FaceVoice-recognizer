@@ -34,7 +34,7 @@ def main(args, argv):
 	train_input_data=list()
 	test_input_data=list()
 
-	if(args != 4):
+	if(args != 5):
 		exit(1)
 
 	try:
@@ -44,7 +44,7 @@ def main(args, argv):
 		# Testing data
 		w_files_dev	= os.listdir(argv[2])
 		w_non_files_dev	= os.listdir(argv[3])
-	
+
 	except:
 		exit(2)
 
@@ -158,7 +158,10 @@ def main(args, argv):
 	print("\tOK:   " + str(Correct_data_OK + InCorrect_data_OK))
 	print("\tFAIL:  " + str(Correct_data_FAIL + InCorrect_data_FAIL))
 
-	net.save(str("NET_ERR_" + str(Correct_data_FAIL + InCorrect_data_FAIL)) + str("_NET"))
+	try:
+		net.save(str(argv[4] + "/" + argv[5] + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
+	except:
+		print("\nERROR: Saving net\n")
 
 	print("\nPROCESSED\n")
 

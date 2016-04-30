@@ -11,15 +11,15 @@ SI_OUTPUT=MFCC_NEURALNTW_EIGENFACES_PCA.output
 # SPEECH
 NEURAL_NETWORK="SPEECH/NEURAL_NETWORKS/NET_ERR_3_NET"
 
-#IMAGE
+# IMAGE
 TRAIN_DATA="Path_to_train_data"
 
 # ---------------------------------------------------------
 # RECOGNIZING DATA
 
-SPEECH/recognize.py  $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
+SPEECH/recognize.py $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
 IMAGE/somtehing.py
 
-./speech_image.py $S_OUTPUT $I_OUTPUT $SI_OUTPUT
+SPEECH_IMAGE/speech_image.py $S_OUTPUT $I_OUTPUT $SI_OUTPUT
 
 echo "Successed"
