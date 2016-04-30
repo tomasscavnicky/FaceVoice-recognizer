@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 # Project: Person recognition, IKR
-# Description: << popis >>
+# Description: Trenovani neuronove site vyuzite pro klasifikaci
 # Author: Radim Lipka, Tomas Scavincky
 # Email: xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz
 # Date: 29.4.2016
-# File: << file name >>
+# File: train.py
 
 __author__ = "Radim Lipka, Tomas Scavincky"
 __version__ = "1.0"
@@ -159,7 +159,8 @@ def main(args, argv):
 	print("\tFAIL:  " + str(Correct_data_FAIL + InCorrect_data_FAIL))
 
 	try:
-		net.save(str(argv[4] + "/" + argv[5] + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
+		print(str(argv[4] + "/" + str(argv[5]) + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
+		net.save(str(argv[4] + "/" + str(argv[5]) + str(Correct_data_FAIL + InCorrect_data_FAIL) + str("_NET")))
 	except:
 		print("\nERROR: Saving net\n")
 
@@ -170,4 +171,4 @@ def main(args, argv):
 if __name__ == '__main__':
 	main(len(sys.argv) - 1, sys.argv[1:])
 
-# End of file << file name >>
+# End of file train.py

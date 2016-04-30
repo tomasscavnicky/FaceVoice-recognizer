@@ -25,14 +25,22 @@ def main(args, argv):
 		speech_file = open(argv[0], "r")
 		image_file = open(argv[1], "r")
 
-	speech_data = speech_file.readlines().split(' ')
-	image_data = image_file.readlines().split(' ')
+	speech_data = speech_file.readlines().split(' ').sorted()
+	image_data = image_file.readlines().split(' ').sorted()
 
-	min_image = max(image_data[]
+	for index in ragne(speech_data):
+		mixed_score = (speech_data[index][1] + image_data[index][1]) / 2
+		outputmixed__score
+		score = 1 if(score > 0.5) else 0
 
 
 
 if __name__ == '__main__':
 	main(len(sys.argv) - 1, sys.argv[1:])
+
+
+
+
+
 
 # End of file << file name >>

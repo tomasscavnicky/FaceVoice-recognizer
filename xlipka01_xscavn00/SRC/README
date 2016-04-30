@@ -1,0 +1,50 @@
+----------------------------------------------------------------------
+Projekt: 	Klasifikace podle obličeje a hlasu
+Autoři: 	Radim Lipka, Tomáš Ščavnický
+Emaily: 	xlipka01@stud.fit.vutbr.cz, scavn00@stud.fit.vutbr.cz
+Datum: 		30.4.2016
+----------------------------------------------------------------------
+
+    0. Prerekvizity
+
+        Python 2.x:
+
+	     numpy, wave, features, matpotlib, neurolab
+
+	Python 3.x:
+
+
+    1. Rozpoznávání řečníka
+
+        1.0 Použité technologie
+
+             - Neuronové sítě pro klasifikaci
+             - Extrakce příznaků pomocí MFCC
+
+        1.1 Skripty
+
+             Přejděte do složky SPEECH/
+
+             1.1.0 - base.py
+
+                  - Obsahuje základní naprogramované funkce pro práci s příznaky a audio soubory. Načítá soubory z formátu wav, odstraňuje ticho, extrahuje příznaky, ukládá do formátu wav
+
+             1.1.1 - speaker_recognition.py
+
+                  - Klasifikuje data, jenž mu jsou předány na vstup (jako složka), spolu s uloženým objektem již natrénované neuronové sítě. Vypisuje statistiky jak na stdout tak do souboru
+
+             1.1.2 - train.py
+
+                  - Skript pro trénování neuronové sítě pomocí vstupních testovacích dat
+
+		  	1. Načte vstupní data
+			2. Odstraní z nich ticho
+			3. Extrakce příznaků pomocí MFCC
+			4. Vytisknutí příznaků jako graf
+			5. Natrénování neuronové sítě (Práh lze měnit)
+			6. Vypsání statistik úspěšnosti a chybovosti
+
+                  Lze měnit jak parametry extrakce příznaků MFCC, tak počet vrstev neuronové sítě. Po celou dobu trénování jsou vypisovány užitečné informace.
+
+
+Konec souboru README  

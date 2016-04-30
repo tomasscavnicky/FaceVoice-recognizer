@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 # Project: Person recognition, IKR
-# Description: << popis >>
+# Description: Zakladni funkce pro praci s audio soubory
 # Author: Radim Lipka, Tomas Scavincky
 # Email: xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz
 # Date: 29.4.2016
-# File: << file name >>
+# File: base.h
 
 __author__ = "Radim Lipka, Tomas Scavincky"
 __version__ = "1.0"
@@ -18,6 +18,9 @@ from features import mfcc
 from features import logfbank
 
 import matplotlib.pyplot as plt
+
+
+# Nacita wav soubory a vraci priznaky MFCC kazdeho z nich
 
 def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 3500, sampling = 16000):
 
@@ -38,6 +41,8 @@ def wav_to_mfcc(path, w_files, mfcc_output, frame_len = 400, trashhold = 3500, s
 	return files
 
 
+# Prevadi nacteny wav soubor z formatu short na priznaky MFCC
+
 def short_to_mfcc(signal, sampling = 16000):
 
 	mfcc_features = mfcc(np.asarray(signal), samplerate=sampling, winlen=0.025, winstep=0.015, numcep=26, nfilt=26, nfft=512, lowfreq=32, highfreq=2000, preemph=0.97, ceplifter=22, appendEnergy=True)
@@ -48,6 +53,8 @@ def short_to_mfcc(signal, sampling = 16000):
 	
 	return np.array(Priznaky)
 
+
+# Hleda ticho v danem kousku signalu
 
 def is_silence(segment, trashhold = 2000):
 
@@ -62,6 +69,8 @@ def is_silence(segment, trashhold = 2000):
 	else:
 		return []
 
+
+# Odstranuje ticho ze signalu
 
 def short_to_unsilenced_short(signal, frame_len = 400, trashhold = 2000, framerate = 16000):
 
@@ -79,6 +88,8 @@ def short_to_unsilenced_short(signal, frame_len = 400, trashhold = 2000, framera
 
 	return processed_signal
 
+
+# Nacita wav soubor do formatu short
 
 def wav_to_short(wave_file, framerate):
 
@@ -99,6 +110,8 @@ def wav_to_short(wave_file, framerate):
         return np.asarray(short_samples)
 
 
+# Uklada signal ve formatu short do wav souboru
+
 def short_to_wav(data, w_file = "unsilenced.wav", frame_rate = 16000, channels = 1, sample_width = 2):
 
 	w = wave.open(w_file, "w")
@@ -115,6 +128,8 @@ def short_to_wav(data, w_file = "unsilenced.wav", frame_rate = 16000, channels =
 
 	w.close()
 
+
+# Odstraneni ticha z nahravky a jeji ulozeni
 
 def main(args, argv):
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 # Project: Person recognition, IKR
-# Description: << popis >>
+# Description: Klasifikuje data
 # Author: Radim Lipka, Tomas Scavincky
 # Email: xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz
 # Date: 29.4.2016
-# File: << file name >>
+# File: speaker_recognition.py
 
 __author__ = "Radim Lipka, Tomas Scavincky"
 __version__ = "1.0"
@@ -13,7 +13,8 @@ __email__ = "xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz"
 __date__ = "29.4.2016"
 
 import re, getopt, wave, sys, os, re, struct, numpy as np
-
+from base import wav_to_mfcc
+import neurolab as nl
 
 def main(args, argv):
 
@@ -25,13 +26,13 @@ def main(args, argv):
 	if(args != 3):
 		exit(1)
 
-	try:
+  	try:
 		# Testing data
 		w_files_test = os.listdir(argv[0])
-		if(argv[1].endswith("NET")):
+		if not(argv[1].endswith("NET")):
 			exit(2)
-		w_file_output = open(argv[1], "w")
-		net = nl.load(argv[2])
+		w_file_output = open(argv[2], "w")
+		net = nl.load(argv[1])
 
 	except:
 		exit(3)
@@ -60,7 +61,7 @@ def main(args, argv):
 
 		if(score > 1):
 			score = 1
-		elif(score < 0)
+		elif(score < 0):
 		 	score = 0
 
 		print(file_name + " " + str(score) + " " + str(decision))
@@ -76,4 +77,4 @@ def main(args, argv):
 if __name__ == '__main__':
 	main(len(sys.argv) - 1, sys.argv[1:])
 
-# End of file << file name >>
+# End of file speaker_recognition

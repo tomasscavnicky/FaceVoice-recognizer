@@ -1,7 +1,9 @@
 #! /bin/sh
 
+# Spustí klasifikaci nad testovanými daty všemi typy klasifikátorů
+
 # COMMON
-TEST_DATA="PATH"
+TEST_DATA="../EVAL/"
 
 S_OUTPUT=MFCC_NEURALNTW.output
 I_OUTPUT=EIGENFACES_PCA.output
@@ -17,8 +19,8 @@ TRAIN_DATA="Path_to_train_data"
 # ---------------------------------------------------------
 # RECOGNIZING DATA
 
-SPEECH/recognize.py $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
-IMAGE/somtehing.py
+SPEECH/speaker_recognition.py $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
+IMAGE/image_recognition.py $TEST_DATA $I_OUTPUT
 
 SPEECH_IMAGE/speech_image.py $S_OUTPUT $I_OUTPUT $SI_OUTPUT
 
