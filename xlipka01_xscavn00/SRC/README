@@ -6,20 +6,21 @@ Datum: 		30.4.2016
 ----------------------------------------------------------------------
 
     0. Prerekvizity
+      Rozpoznávání hlasu:
+      Python 2.x
+      numpy, wave, features, matpotlib, neurolab
 
-        Python 2.x:
-
-	     numpy, wave, features, matpotlib, neurolab
-
-	Python 3.x:
+      Rozpoznávání tvare:
+      Python 3.x:
+      sklearn, PIL, numpy, matplotlib
 
 
     1. Rozpoznávání řečníka
 
         1.0 Použité technologie
 
-             - Neuronové sítě pro klasifikaci
-             - Extrakce příznaků pomocí MFCC
+            - Neuronové sítě pro klasifikaci
+            - Extrakce příznaků pomocí MFCC
 
         1.1 Skripty
 
@@ -46,5 +47,14 @@ Datum: 		30.4.2016
 
                   Lze měnit jak parametry extrakce příznaků MFCC, tak počet vrstev neuronové sítě. Po celou dobu trénování jsou vypisovány užitečné informace.
 
+    2. Rozpoznávanie tváre
+      2.1 Technológie
+        Vlastné vektory, PCA
+
+      2.2 Postup vyhodnotenia
+        - získanie vlastných vektorov VV1 z trénovacieho datasetu
+        - získanie vlastných vektorov VV2 z klasifikovaného obrázku
+        - porovnanie vzdialenosti medzi VV1 a VV2
+        - klasifikácia triedy obrázku na základe predchádzajúceho kroku
 
 Konec souboru README  
