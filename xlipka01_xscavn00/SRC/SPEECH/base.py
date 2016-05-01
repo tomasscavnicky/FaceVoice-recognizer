@@ -5,7 +5,7 @@
 # Author: Radim Lipka, Tomas Scavincky
 # Email: xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz
 # Date: 29.4.2016
-# File: base.h
+# File: base.py
 
 __author__ = "Radim Lipka, Tomas Scavincky"
 __version__ = "1.0"
@@ -150,4 +150,4 @@ def main(args, argv):
 if __name__ == '__main__':
 	main(len(sys.argv) - 1, sys.argv[1:])
 
-# End of file << file name >>
+# End of file base.py

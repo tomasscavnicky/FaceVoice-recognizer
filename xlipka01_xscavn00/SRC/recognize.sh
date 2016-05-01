@@ -1,17 +1,17 @@
 #! /bin/sh
 
-# Spustí klasifikaci nad testovanými daty všemi typy klasifikátorů
+# Spustí klasifikaci nad testovanými daty všemi typmi klasifikátorů
 
 # COMMON
 TEST_DATA="../EVAL/"
 
-S_OUTPUT=MFCC_NEURALNTW.output
-I_OUTPUT=EIGENFACES_PCA.output
-SI_OUTPUT=MFCC_NEURALNTW_EIGENFACES_PCA.output
+S_OUTPUT=Audio_Mfcc_NeuralNet
+I_OUTPUT=Image_Eigenfaces_Pca
+SI_OUTPUT=Both_Mfcc_NeuralNet_Eigenfaces_Pca
 
 
 # SPEECH
-NEURAL_NETWORK="SPEECH/NEURAL_NETWORKS/NET_ERR_3_NET"
+NEURAL_NETWORK="SPEECH/NEURAL_NETWORKS/SPEAKER_NTW1_NET"
 
 # IMAGE
 TRAIN_DATA="Path_to_train_data"
