@@ -43,14 +43,14 @@ y = numpy.zeros(NUM_TRAINIMAGES) # labels
 def train_and_classify(filepath_to_classification_folder):
 	if filepath_to_classification_folder[-1] != '/':
 		filepath_to_classification_folder += '/'
-	folder_name = "target_train/"
+	folder_name = "DATA/target_train/"
 	test_positive_faces = glob.glob(folder_name+"*.png")
 	imnbr_pos = len(test_positive_faces)
 
 	target = numpy.array([numpy.array(Image.open(test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
 
-	folder_name = "non_target_train/"
+	folder_name = "DATA/non_target_train/"
 	test_positive_faces = glob.glob(folder_name+"*.png")
 	imnbr_pos = len(test_positive_faces)
 
