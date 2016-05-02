@@ -6,21 +6,48 @@ Datum: 		30.4.2016
 ----------------------------------------------------------------------
 
     0. Prerekvizity
-      Rozpoznávání hlasu:
-      Python 2.x
-      numpy, wave, features, matpotlib, neurolab
 
-      Rozpoznávání tvare:
-      Python 3.x:
-      sklearn, PIL, numpy, matplotlib
+        Rozpoznávání řečníka:
+           Python 2.x
+              numpy, wave, features, matpotlib, neurolab
+
+        Rozpoznávání tvare:
+           Python 3.x:
+              sklearn, PIL, numpy, matplotlib
 
 
     1. Rozpoznávání řečníka
 
         1.0 Použité technologie
 
-            - Neuronové sítě pro klasifikaci
+            - Odstranění ticha a vstupní nárazové vlny signálů
+	    	  - Rozdělení na podokna
+	    	  - Pomocí vypočtení energie a určení trashholdu
             - Extrakce příznaků pomocí MFCC
+	          - Rozdělení na podokna
+	          - Hammingovo okno
+		  - High pass filter
+		  - Spektrum signálu
+		  - Výroba koeficientů
+		  - Zlogaritmování
+		  - Promítnutí do Cosinových bází
+		  - Zprůměrování všech koeficientů = hledáme základní hlasovou frekvenci
+            - Neuronové sítě pro klasifikaci
+                  - Učení pomocí Gradient Descent
+		  - Náš řečník - výstup = 1
+		  - Není náš řečník - výstup = 0
+		  - Práh rozhodování = 0.5
+		  - Aktivační funkce = logistická sigmoida (vrací hodnoty mezi 0 a 1 - ideální)
+		  - Po natrénování nad trénovacími daty a testování nad testovacími, chybovost = 4%
+
+		+ KLADY:
+
+			Vysoká úspěšnost
+			Relativní jednoduchost
+
+		- ZÁPORY
+
+			Když řečník šeptá, nebo má podobný hlas, neklasifikuje správně
 
         1.1 Skripty
 
@@ -48,6 +75,7 @@ Datum: 		30.4.2016
                   Lze měnit jak parametry extrakce příznaků MFCC, tak počet vrstev neuronové sítě. Po celou dobu trénování jsou vypisovány užitečné informace.
 
     2. Rozpoznávanie tváre
+
       2.1 Technológie
         Vlastné vektory, PCA
 
@@ -64,4 +92,4 @@ Datum: 		30.4.2016
         - premenné train_target_folder and train_non_target_folder musia byť nastavené staticky v
           skripte tak, aby obsahovali cestu k trénovacím dátam
 
-Konec souboru README  
+Konec souboru README 

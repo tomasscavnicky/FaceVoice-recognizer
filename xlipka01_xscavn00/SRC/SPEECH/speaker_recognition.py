@@ -54,7 +54,7 @@ def main(args, argv):
 		file_name = file_name[-1].split('.')
 		file_name = file_name[-2]
 
-		if(score > 0.5):
+		if(score > 0.92):
 			decision = 1
 		else:
 		 	decision = 0

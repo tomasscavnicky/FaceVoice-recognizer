@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+
+# Project: Person recognition, IKR
+# Description: Extrakce a porovnavani priznaku z obrazku
+# Author: Radim Lipka, Tomas Scavincky
+# Email: xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz
+# Date: 29.4.2016
+# File: image_recognition.py
+
+__author__ = "Radim Lipka, Tomas Scavincky"
+__version__ = "1.0"
+__email__ = "xlipka01@stud.fit.vutbr.cz, xscavn00@stud.fit.vutbr.cz"
+__date__ = "29.4.2016"
+
+
 from sklearn.decomposition import RandomizedPCA
 from PIL import Image
 import numpy

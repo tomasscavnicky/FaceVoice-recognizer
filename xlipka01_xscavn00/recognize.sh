@@ -11,7 +11,8 @@ SI_OUTPUT=Both_Mfcc_NeuralNet_Eigenfaces_Pca
 
 
 # SPEECH
-NEURAL_NETWORK="SPEECH/NEURAL_NETWORKS/SPEAKER_NTW1_NET"
+NEURAL_NETWORK="SRC/SPEECH/NEURAL_NETWORKS/SPEAKER_NTW1_NET"
+NEURAL_NETWORK="SRC/SPEECH/NEURAL_NETWORKS/SPEAKER_NTW_ALL_DATA0_NET"
 
 # IMAGE
 TRAIN_DATA="Path_to_train_data"
@@ -19,9 +20,9 @@ TRAIN_DATA="Path_to_train_data"
 # ---------------------------------------------------------
 # RECOGNIZING DATA
 
-SPEECH/speaker_recognition.py $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
-IMAGE/image_recognition.py $TEST_DATA $I_OUTPUT
+SRC/SPEECH/speaker_recognition.py $TEST_DATA $NEURAL_NETWORK $S_OUTPUT
+SRC/IMAGE/image_recognition.py $TEST_DATA $I_OUTPUT
 
-SPEECH_IMAGE/speech_image.py $S_OUTPUT $I_OUTPUT $SI_OUTPUT
+SRC/SPEECH_IMAGE/speech_image.py $S_OUTPUT $I_OUTPUT $SI_OUTPUT
 
 echo "Successed"
