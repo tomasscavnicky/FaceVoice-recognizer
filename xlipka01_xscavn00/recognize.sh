@@ -3,7 +3,7 @@
 # Spustí klasifikaci nad testovanými daty všemi typmi klasifikátorů
 
 # COMMON
-TEST_DATA="EVAL/"
+TEST_DATA="../EVAL/"
 
 S_OUTPUT=Audio_Mfcc_NeuralNet
 I_OUTPUT=Image_Eigenfaces_Pca
