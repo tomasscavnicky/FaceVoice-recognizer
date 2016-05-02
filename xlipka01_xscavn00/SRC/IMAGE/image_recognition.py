@@ -41,7 +41,7 @@ def load_images(folder_name):
 	return final_array
 
 
-def plot_gallery(images, titles, h, w, n_row=2, n_col=5):
+def plot_gallery(images, titles, h, w, n_row=4, n_col=5):
     """Helper function to plot a gallery of portraits"""
     plt.figure(figsize=(1.8 * n_col, 2.4 * n_row))
     plt.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
@@ -54,14 +54,15 @@ def plot_gallery(images, titles, h, w, n_row=2, n_col=5):
 
 
 # SET THESE TWO VARIABLES
-train_target_folder = "../DATA/target_train/" # <-- folder with target training faces
-train_non_target_folder = "../DATA/non_target_train/" # <-- folder with non target training faces
+train_target_folder = "../../DATA/target_train/" # <-- folder with target training faces
+train_non_target_folder = "../../DATA/non_target_train/" # <-- folder with non target training faces
 
 
 
 IMG_RES = 80 * 80
-NUM_EIGENFACES = 10 # num of features extracted from training images
+NUM_EIGENFACES = 20 # num of features extracted from training images
 NUM_TRAINIMAGES = 444 # num of training images
+DISTANCE_THRESHOLD = 3.0
 
  
 X = numpy.zeros([NUM_TRAINIMAGES, IMG_RES], dtype='int8') # training images
@@ -101,12 +102,11 @@ def train_and_classify(filepath_to_classification_folder):
 	pca = RandomizedPCA(n_components=NUM_EIGENFACES, whiten=True).fit(X)
 	X_pca = pca.transform(X)
 
-	eigenfaces = pca.components_.reshape((10, 80, 80))
-	
-	eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
-	plot_gallery(eigenfaces, eigenface_titles, 80, 80)
-	plt.show()
-	exit()
+	# eigenfaces = pca.components_.reshape((NUM_EIGENFACES, 80, 80))
+	# eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
+	# plot_gallery(eigenfaces, eigenface_titles, 80, 80)
+	# plt.show()
+	# exit()
 
 
 	# load test faces
@@ -121,7 +121,7 @@ def train_and_classify(filepath_to_classification_folder):
 
 	X = numpy.array([numpy.array(Image.open(test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
-	# run through test images
+	# face classification
 	results = []
 	
 	for j, ref_pca in enumerate(pca.transform(X)):
@@ -129,34 +129,26 @@ def train_and_classify(filepath_to_classification_folder):
 	    # calculate euclidian distance from test image to each of the known images and save distances
 	    for i, test_pca in enumerate(X_pca):
 	        dist = math.sqrt(sum([diff**2 for diff in (ref_pca - test_pca)]))
-	        distances.append((dist, 0))
+	        distances.append(dist)
 
-	    found_distance = min(distances)[0]	 
-	    found_ID = min(distances)[1]
-	    distances.sort()
-	    # i = 0
-	    # while(found_ID == distances[i][1]):
-	    # 	i += 1
-	    # confidence = 1 - (distances[0][0] / distances[i][0])
+	    found_distance = min(distances)
 	    file_name = re.search('/([^/]+).png', test_positive_faces[j]).group(1)
-	    results.append((file_name, found_distance, floor(found_ID)))
+	    hard_decision = 1 if found_distance <= DISTANCE_THRESHOLD else 0
+	    confidence = found_distance / DISTANCE_THRESHOLD if hard_decision == 1 else DISTANCE_THRESHOLD / found_distance
+	    results.append((file_name, found_distance, hard_decision))
 	return results
 	
 	
 
 if __name__ == "__main__": 
-	# if sys.argc < 2:
-	# 	print("python3 image_recognition.py <path to folder with pictures to classify> <name of file, where to write results>")
 	results = train_and_classify(sys.argv[1])
 	formated_results = []
 	for elem in results:
 		formated_results.append(' '.join(str(i) for i in elem))
 	results = '\n'.join(formated_results)
-	if sys.argv[2] != None:
+	if len(sys.argv) >= 3:
 		fp = open(sys.argv[2], 'w')
 		fp.write(results)
 		fp.close()
 	else:
 		print(results)
-
-
