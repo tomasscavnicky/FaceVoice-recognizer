@@ -1,5 +1,5 @@
-# IKR_klasifikace
+# Face and voice recognition tool
 
--Projekt do předmětu IKR. Klasifikace osoby na základě fotografie a audio nahrávky.
+Project for IKR (classification and recognition) course at FIT BUT.
 
-Implementace v jazyku: Python3
+Script classifies person based on her/his speech and face snapshot.
