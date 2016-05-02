@@ -38,6 +38,9 @@ def plot_gallery(images, titles, h, w, n_row=2, n_col=5):
         plt.yticks(())
 
 
+# SET THESE TWO VARIABLES
+train_target_folder = "../DATA/target_train/" # <-- folder with target training faces
+train_non_target_folder = "../DATA/non_target_train/" # <-- folder with non target training faces
 
 
 
@@ -54,14 +57,16 @@ y = numpy.zeros(NUM_TRAINIMAGES) # labels
 def train_and_classify(filepath_to_classification_folder):
 	if filepath_to_classification_folder[-1] != '/':
 		filepath_to_classification_folder += '/'
-	folder_name = "DATA/target_train/"
+
+
+	folder_name = train_target_folder
 	test_positive_faces = glob.glob(folder_name+"*.png")
 	imnbr_pos = len(test_positive_faces)
 
 	target = numpy.array([numpy.array(Image.open(test_positive_faces[i]).convert('L')).flatten() for i in range(imnbr_pos)],'f')
 
 
-	folder_name = "DATA/non_target_train/"
+	folder_name = train_non_target_folder
 	test_positive_faces = glob.glob(folder_name+"*.png")
 	imnbr_pos = len(test_positive_faces)
 
